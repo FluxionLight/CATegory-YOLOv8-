@@ -1,0 +1,106 @@
+{
+    "version": "5.0.1",
+    "flags": {},
+    "shapes": [
+        {
+            "label": "class_5",
+            "points": [
+                [
+                    10,
+                    0
+                ],
+                [
+                    9,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    316
+                ],
+                [
+                    1,
+                    317
+                ],
+                [
+                    190,
+                    317
+                ],
+                [
+                    191,
+                    316
+                ],
+                [
+                    193,
+                    316
+                ],
+                [
+                    194,
+                    317
+                ],
+                [
+                    339,
+                    317
+                ],
+                [
+                    340,
+                    316
+                ],
+                [
+                    341,
+                    317
+                ],
+                [
+                    344,
+                    317
+                ],
+                [
+                    345,
+                    316
+                ],
+                [
+                    346,
+                    316
+                ],
+                [
+                    347,
+                    317
+                ],
+                [
+                    349,
+                    317
+                ],
+                [
+                    350,
+                    316
+                ],
+                [
+                    351,
+                    316
+                ],
+                [
+                    351,
+                    1
+                ],
+                [
+                    14,
+                    1
+                ],
+                [
+                    13,
+                    0
+                ]
+            ],
+            "group_id": null,
+            "shape_type": "polygon",
+            "flags": {}
+        }
+    ],
+    "imagePath": "F:\\TechResearchPractice\\YOLOv8\\YOLOv8-main\\datasets\\CatCategory\\CATimages\\Birman_Birman_164.jpg",
+    "imageData": null,
+    "imageHeight": 319,
+    "imageWidth": 352
+}
