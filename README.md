@@ -5,4 +5,4 @@
 
 本实验的YOLO部署基于项目：https://github.com/DataXujing/YOLOv8
 
-初版训练集的数据来源为项目：https://github.com/Aml-Hassan-Abd-El-hamid/datasets，对其进行了目标识别格式到YOLO格式的转换
+初版训练集的数据来源为项目：https://github.com/Aml-Hassan-Abd-El-hamid/datasets ，对其进行了目标识别格式到YOLO格式的转换
