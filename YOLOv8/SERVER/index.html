@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATegory | 智能识别</title>
+    <link rel="icon" href="/static/icon.jpg"> 
+    <style>
+        :root { --primary: #4f46e5; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: system-ui; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
+        .container { max-width: 450px; width: 100%; background: white; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; }
+        
+        /* 滑动开关 */
+        .switch-box { position: relative; display: flex; background: #e2e8f0; border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+        .switch-box input { display: none; }
+        .switch-label { flex: 1; padding: 10px; cursor: pointer; z-index: 2; font-weight: 600; font-size: 14px; transition: 0.3s; }
+        .slider { position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); background: white; border-radius: 10px; transition: 0.3s; z-index: 1; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        #domestic:checked ~ .slider { transform: translateX(0); }
+        #international:checked ~ .slider { transform: translateX(100%); }
+        #domestic:checked ~ label[for="domestic"], #international:checked ~ label[for="international"] { color: var(--primary); }
+
+        /* 上传区 */
+        .upload-area { width: 100%; min-height: 240px; border: 2px dashed #cbd5e1; border-radius: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; margin-bottom: 15px; background: #fdfdfd; }
+        #outputCanvas { max-width: 100%; display: none; }
+        .placeholder { color: #94a3b8; font-size: 14px; }
+
+        /* 结果列表 */
+        .result-item { display: flex; justify-content: space-between; background: #f1f5f9; padding: 12px; border-radius: 10px; margin-top: 8px; font-size: 14px; }
+        .id-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 6px; margin-right: 8px; }
+
+        /* 按钮与弹窗 */
+        .btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-opt { background: none; border: 1px solid #cbd5e1; color: #64748b; margin-top: 10px; padding: 8px; width: 100%; border-radius: 10px; cursor: pointer; font-size: 12px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; backdrop-filter: blur(4px); }
+        .modal-content { background: white; width: 80%; max-width: 320px; margin: 150px auto; padding: 25px; border-radius: 20px; }
+        input[type="text"] { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🐱 CATegory</h2>
+    
+    <div class="switch-box">
+        <input type="radio" id="domestic" name="cat_type" value="domestic" checked>
+        <label for="domestic" class="switch-label">中华本土猫</label>
+        <input type="radio" id="international" name="cat_type" value="international">
+        <label for="international" class="switch-label">国际名猫</label>
+        <div class="slider"></div>
+    </div>
+
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+        <div id="placeholder" class="placeholder">📸 点击上传猫咪照片</div>
+        <canvas id="outputCanvas"></canvas>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+
+    <p id="status" style="font-size: 14px; color: var(--primary); min-height: 20px;"></p>
+    
+    <button class="btn" onclick="startIdentify()">开始识别</button>
+    
+    <div id="resultList" style="margin-top: 20px; text-align: left; display: none;">
+        <span style="font-weight: bold; font-size: 14px;">识别明细:</span>
+        <div id="listItems"></div>
+    </div>
+
+    <button class="btn-opt" onclick="showFeedback()">结果不准？提交纠正建议</button>
+</div>
+
+<div id="feedbackModal" class="modal">
+    <div class="modal-content">
+        <h4 style="margin:0">纠正品种</h4>
+        <input type="text" id="correctLabel" placeholder="应为什么种类？">
+        <button class="btn" onclick="submitFeedback()">提交反馈</button>
+        <button class="btn-opt" onclick="closeFeedback()" style="border:none">取消</button>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const canvas = document.getElementById('outputCanvas');
+    const ctx = canvas.getContext('2d');
+    const status = document.getElementById('status');
+    const listItems = document.getElementById('listItems');
+    const resultList = document.getElementById('resultList');
+    let currentImg = new Image();
+
+    fileInput.onchange = () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImg.src = e.target.result;
+                currentImg.onload = () => {
+                    document.getElementById('placeholder').style.display = 'none';
+                    canvas.style.display = 'block';
+                    canvas.width = currentImg.width;
+                    canvas.height = currentImg.height;
+                    ctx.drawImage(currentImg, 0, 0);
+                    resultList.style.display = 'none';
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    async function startIdentify() {
+        if (!fileInput.files[0]) return alert("请先选择图片");
+        const modelType = document.querySelector('input[name="cat_type"]:checked').value;
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('model_type', modelType);
+
+        status.innerText = "正在全力推理...";
+        try {
+            const response = await fetch('/predict', { method: 'POST', body: formData });
+            const data = await response.json();
+            
+            ctx.drawImage(currentImg, 0, 0);
+            listItems.innerHTML = '';
+
+            if (data.results.length > 0) {
+                resultList.style.display = 'block';
+                data.results.forEach(res => {
+                    const [x1, y1, x2, y2] = res.box;
+                    // 画框
+                    ctx.strokeStyle = "#4f46e5";
+                    ctx.lineWidth = Math.max(canvas.width / 80, 4);
+                    ctx.strokeRect(x1, y1, x2-x1, y2-y1);
+                    
+                    // 画编号标签
+                    const radius = Math.max(canvas.width / 35, 15);
+                    ctx.fillStyle = "#4f46e5";
+                    ctx.beginPath();
+                    ctx.arc(x1 + radius, y1 + radius, radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "white";
+                    ctx.font = `bold ${radius}px Arial`;
+                    ctx.textAlign = "center";
+                    ctx.fillText(res.id, x1 + radius, y1 + radius + (radius/3));
+
+                    // 添加列表项
+                    const div = document.createElement('div');
+                    div.className = 'result-item';
+                    div.innerHTML = `<span><b class="id-badge">${res.id}</b> ${res.label}</span> <span>${(res.confidence*100).toFixed(1)}%</span>`;
+                    listItems.appendChild(div);
+                });
+                status.innerText = `检测到 ${data.results.length} 只猫咪`;
+            } else {
+                status.innerText = "未发现猫咪，或许可以切换模式试下";
+            }
+        } catch (e) { status.innerText = "❌ 后端连接失败"; }
+    }
+
+    function showFeedback() { if(fileInput.files[0]) document.getElementById('feedbackModal').style.display='block'; }
+    function closeFeedback() { document.getElementById('feedbackModal').style.display='none'; }
+
+    async function submitFeedback() {
+        const label = document.getElementById('correctLabel').value;
+        if (!label) return;
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('correct_label', label);
+        try {
+            await fetch('/feedback', { method: 'POST', body: formData });
+            alert("感谢纠正！数据已入库。");
+            closeFeedback();
+        } catch (e) { alert("提交失败"); }
+    }
+</script>
+</body>
+</html>

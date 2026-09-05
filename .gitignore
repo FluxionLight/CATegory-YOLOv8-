@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+yolo_env/
+*.cache
+
+# 推理服务运行时临时文件
+YOLOv8/SERVER/temp_*
+
+# Node / 前端
+node_modules/
+dist/
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

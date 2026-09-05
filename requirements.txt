@@ -1,0 +1,19 @@
+# 数据管道 / 工具脚本(部分)
+ultralytics>=8.0.0        # YOLOv8 训练/推理 + 自动标注接口
+fastapi>=0.110
+uvicorn[standard]
+python-multipart
+pyyaml
+scikit-learn             # FinalTrain/split_data.py
+opencv-python
+
+# 分类 API(MeowIDAPI-deploy,基于 PyTorch ResNet-50)
+torch>=2.0
+torchvision
+tqdm
+numpy
+pillow
+
+# Web 服务(Flask)
+flask
+flask-cors

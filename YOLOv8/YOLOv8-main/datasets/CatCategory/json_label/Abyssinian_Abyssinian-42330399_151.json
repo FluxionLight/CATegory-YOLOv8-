@@ -1,0 +1,78 @@
+{
+    "version": "5.0.1",
+    "flags": {},
+    "shapes": [
+        {
+            "label": "class_0",
+            "points": [
+                [
+                    27,
+                    123
+                ],
+                [
+                    27,
+                    123
+                ],
+                [
+                    31,
+                    119
+                ],
+                [
+                    31,
+                    118
+                ],
+                [
+                    252,
+                    113
+                ],
+                [
+                    64,
+                    100
+                ],
+                [
+                    177,
+                    90
+                ],
+                [
+                    177,
+                    88
+                ],
+                [
+                    177,
+                    90
+                ],
+                [
+                    64,
+                    100
+                ],
+                [
+                    64,
+                    100
+                ],
+                [
+                    252,
+                    113
+                ],
+                [
+                    252,
+                    113
+                ],
+                [
+                    31,
+                    118
+                ],
+                [
+                    31,
+                    119
+                ]
+            ],
+            "group_id": null,
+            "shape_type": "polygon",
+            "flags": {}
+        }
+    ],
+    "imagePath": "F:\\TechResearchPractice\\YOLOv8\\YOLOv8-main\\datasets\\CatCategory\\CATimages\\Abyssinian_Abyssinian-42330399_151.jpg",
+    "imageData": null,
+    "imageHeight": 183,
+    "imageWidth": 300
+}

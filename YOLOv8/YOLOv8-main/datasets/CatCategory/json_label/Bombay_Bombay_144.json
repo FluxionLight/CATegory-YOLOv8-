@@ -1,0 +1,50 @@
+{
+    "version": "5.0.1",
+    "flags": {},
+    "shapes": [
+        {
+            "label": "class_6",
+            "points": [
+                [
+                    288,
+                    0
+                ],
+                [
+                    287,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    249
+                ],
+                [
+                    320,
+                    249
+                ],
+                [
+                    320,
+                    1
+                ],
+                [
+                    296,
+                    1
+                ],
+                [
+                    295,
+                    0
+                ]
+            ],
+            "group_id": null,
+            "shape_type": "polygon",
+            "flags": {}
+        }
+    ],
+    "imagePath": "F:\\TechResearchPractice\\YOLOv8\\YOLOv8-main\\datasets\\CatCategory\\CATimages\\Bombay_Bombay_144.jpg",
+    "imageData": null,
+    "imageHeight": 250,
+    "imageWidth": 321
+}
